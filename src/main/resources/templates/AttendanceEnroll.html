@@ -1,0 +1,15 @@
+<!-- src/main/resources/templates/createTable.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Table</title>
+</head>
+<body>
+<form action="/attendance/success" method="post">
+    <label for="tableName">Enter Table Name:</label>
+    <input type="text" id="tableName" name="tableName" required>
+    <button type="submit">Create Table</button>
+</form>
+</body>
+</html>

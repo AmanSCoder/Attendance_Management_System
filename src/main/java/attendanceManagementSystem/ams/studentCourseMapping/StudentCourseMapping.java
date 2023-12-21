@@ -5,13 +5,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 
+
 @Entity
 @Table
 public class StudentCourseMapping
 {
     @Id
     private String studentId;
-    @Id
     private String courseId;
     private String facultyId;
 

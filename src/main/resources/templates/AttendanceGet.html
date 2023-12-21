@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Sheets</title>
+</head>
+<body>
+
+<h1>Attendance Sheets</h1>
+
+<div id="attendance-data"></div>
+
+<script>
+        fetch('/attendance/get-all')
+            .then(response => response.json())
+            .then(data => {
+                const attendanceDataContainer = document.getElementById('attendance-data');
+                data.forEach(attendance => {
+                    const attendanceDiv = document.createElement('div');
+                    attendanceDiv.innerHTML = `
+                        <strong>Class ID:</strong> ${attendance.classId}<br>
+                        <strong>JSON Data:</strong> ${JSON.stringify(attendance.jsonData)}<br>
+                        <strong>Faculty ID:</strong> ${attendance.facultyId}<br>
+                        <strong>Course ID:</strong> ${attendance.courseId}<br><br>
+                    `;
+                    attendanceDataContainer.appendChild(attendanceDiv);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+
+</body>
+</html>

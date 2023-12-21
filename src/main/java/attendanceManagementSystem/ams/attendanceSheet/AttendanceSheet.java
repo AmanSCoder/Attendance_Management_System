@@ -1,11 +1,7 @@
-package attendanceManagementSystem.ams.AttendanceSheet;
+package attendanceManagementSystem.ams.attendanceSheet;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
-import java.util.HashMap;
 
 
 @Entity

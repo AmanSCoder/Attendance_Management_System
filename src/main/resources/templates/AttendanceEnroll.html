@@ -1,15 +1,65 @@
-<!-- src/main/resources/templates/createTable.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Table</title>
+    <meta name="viewport" content="width=dev32ice-width, initial-scale=1.0">
+    <title>Enrollment Form</title>
 </head>
 <body>
+
+<h2>Enrollment Form</h2>
+
 <form action="/attendance/success" method="post">
-    <label for="tableName">Enter Table Name:</label>
-    <input type="text" id="tableName" name="tableName" required>
-    <button type="submit">Create Table</button>
+    <label for="classId">Class ID:</label>
+    <input type="text" id="classId" name="classId" required>
+    <br>
+
+    <label for="courseId">Course ID:</label>
+    <input type="text" id="courseId" name="courseId" required>
+    <br>
+
+    <label for="facultyId">Faculty ID:</label>
+    <input type="text" id="facultyId" name="facultyId" required>
+    <br>
+
+    <label for="startDate">Starting Date:</label>
+    <input type="date" id="startDate" name="startDate" required>
+    <br>
+
+    <label for="endDate">Ending Date:</label>
+    <input type="date" id="endDate" name="endDate" required>
+    <br>
+
+    <label>Days of the Week:</label>
+    <br>
+    <input type="checkbox" id="monday" name="daysOfWeek" value="Monday">
+    <label for="monday">Monday</label>
+    <br>
+
+    <input type="checkbox" id="tuesday" name="daysOfWeek" value="Tuesday">
+    <label for="tuesday">Tuesday</label>
+    <br>
+
+    <input type="checkbox" id="wednesday" name="daysOfWeek" value="Wednesday">
+    <label for="wednesday">Wednesday</label>
+    <br>
+
+    <input type="checkbox" id="thursday" name="daysOfWeek" value="Thursday">
+    <label for="thursday">Thursday</label>
+    <br>
+
+    <input type="checkbox" id="friday" name="daysOfWeek" value="Friday">
+    <label for="friday">Friday</label>
+    <br>
+
+    <!-- Add more checkboxes as needed for other days -->
+
+    <label for="studentRegNos">Set of Student Reg No (Separated by commas):</label>
+    <input type="text" id="studentRegNos" name="studentRegNos" required>
+    <br>
+
+    <input type="submit" value="Enroll">
 </form>
+
 </body>
 </html>

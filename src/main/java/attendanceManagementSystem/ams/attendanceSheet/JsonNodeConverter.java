@@ -1,4 +1,4 @@
-package attendanceManagementSystem.ams.AttendanceSheet;//package com.example.attendance.AttendanceSheet;
+package attendanceManagementSystem.ams.attendanceSheet;//package com.example.attendance.AttendanceSheet;
 //
 //import com.fasterxml.jackson.core.JsonProcessingException;
 //import com.fasterxml.jackson.databind.JsonNode;

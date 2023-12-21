@@ -1,8 +1,7 @@
-package attendanceManagementSystem.ams.AttendanceSheet;
+package attendanceManagementSystem.ams.attendanceSheet;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -45,7 +45,8 @@ public class AttendanceSheetController
                                              @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                              @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
                                              @RequestParam("daysOfWeek") List<String> daysOfWeek,
-                                             @RequestParam("studentRegNos") String studentRegNos) throws JsonProcessingException, SQLException
+                                             @RequestParam("studentRegNos") String studentRegNos,
+                                             RedirectAttributes redirectAttributes) throws JsonProcessingException, SQLException
     {
         studentList=attendanceSheetService.getStudentList(studentRegNos);
         dateList=attendanceSheetService.getDateList(startDate,endDate,daysOfWeek);
@@ -54,7 +55,10 @@ public class AttendanceSheetController
         ObjectMapper objectMapper=new ObjectMapper();
         attendanceSheetService.addNewAttendanceSheet(new AttendanceSheet(classId,objectMapper.valueToTree(json),facultyId,courseId));
 
-        return "Success";
+        redirectAttributes.addFlashAttribute("studentList",studentList);
+        redirectAttributes.addFlashAttribute("courseId",courseId);
+        redirectAttributes.addFlashAttribute("facultyId",facultyId);
+        return "redirect:/studentcoursemapping/success";
     }
     @GetMapping("/get-all")
     public ResponseEntity<?> getAllAttendanceSheets()

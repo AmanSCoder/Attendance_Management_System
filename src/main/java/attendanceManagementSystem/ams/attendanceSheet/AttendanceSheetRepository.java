@@ -1,4 +1,4 @@
-package attendanceManagementSystem.ams.AttendanceSheet;
+package attendanceManagementSystem.ams.attendanceSheet;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;

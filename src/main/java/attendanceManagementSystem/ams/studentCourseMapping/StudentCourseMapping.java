@@ -12,17 +12,14 @@ public class StudentCourseMapping
 {
     @Id
     private String studentId;
-    private String courseId;
-    private String facultyId;
+    private String classId;
 
-    public StudentCourseMapping()
-    {
+    public StudentCourseMapping() {
     }
 
-    public StudentCourseMapping(String studentId, String courseId, String facultyId) {
+    public StudentCourseMapping(String studentId, String classId) {
         this.studentId = studentId;
-        this.courseId = courseId;
-        this.facultyId = facultyId;
+        this.classId = classId;
     }
 
     public String getStudentId() {
@@ -33,20 +30,11 @@ public class StudentCourseMapping
         this.studentId = studentId;
     }
 
-    public String getCourseId() {
-        return courseId;
+    public String getClassId() {
+        return classId;
     }
 
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
+    public void setClassId(String classId) {
+        this.classId = classId;
     }
-
-    public String getFacultyId() {
-        return facultyId;
-    }
-
-    public void setFacultyId(String facultyId) {
-        this.facultyId = facultyId;
-    }
-
 }

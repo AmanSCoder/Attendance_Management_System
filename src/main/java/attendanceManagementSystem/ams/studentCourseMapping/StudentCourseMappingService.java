@@ -17,12 +17,12 @@ public class StudentCourseMappingService
         this.studentCourseMappingRepository = studentCourseMappingRepository;
     }
 
-    public void addNewMapping(List<String> studentList, String courseId, String facultyId)
+    public void addNewMapping(List<String> studentList, String classId)
     {
         List<StudentCourseMapping> studentCourseMapping=new ArrayList<>();
         for(String student:studentList)
         {
-            studentCourseMapping.add(new StudentCourseMapping(student,courseId,facultyId));
+            studentCourseMapping.add(new StudentCourseMapping(student,classId));
         }
         studentCourseMappingRepository.saveAll(studentCourseMapping);
     }

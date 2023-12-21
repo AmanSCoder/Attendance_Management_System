@@ -23,10 +23,9 @@ public class StudentCourseMappingController
 
     @GetMapping("success")
     public String registerNewMapping(@ModelAttribute("studentList") List<String> studentList,
-                                     @ModelAttribute("courseId") String courseId,
-                                     @ModelAttribute("facultyId") String facultyId)
+                                     @ModelAttribute("classId") String classId)
     {
-        studentCourseMappingService.addNewMapping(studentList,courseId,facultyId);
+        studentCourseMappingService.addNewMapping(studentList,classId);
         return "Success";
     }
 

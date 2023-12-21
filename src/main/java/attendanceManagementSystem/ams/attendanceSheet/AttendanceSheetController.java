@@ -56,8 +56,7 @@ public class AttendanceSheetController
         attendanceSheetService.addNewAttendanceSheet(new AttendanceSheet(classId,objectMapper.valueToTree(json),facultyId,courseId));
 
         redirectAttributes.addFlashAttribute("studentList",studentList);
-        redirectAttributes.addFlashAttribute("courseId",courseId);
-        redirectAttributes.addFlashAttribute("facultyId",facultyId);
+        redirectAttributes.addFlashAttribute("classId",classId);
         return "redirect:/studentcoursemapping/success";
     }
     @GetMapping("/get-all")

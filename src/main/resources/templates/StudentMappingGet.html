@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Course Mapping</title>
+</head>
+<body>
+
+<h2>Student Course Mapping</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Student ID</th>
+        <th>Class ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="mapping : ${mappings}">
+        <td th:text="${mapping.studentId}"></td>
+        <td th:text="${mapping.attendanceSheet.classId}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Student Course Mapping</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<h2>Student Course Mapping</h2>-->
+
+<!--<div id="mapping-data"></div>-->
+
+<!--<script>-->
+<!--    // Make an AJAX request to fetch data from the backend-->
+<!--    fetch('//studentcoursemapping/get-all')-->
+<!--        .then(response => response.json())-->
+<!--        .then(data => {-->
+<!--            // Access the data and populate the container-->
+<!--            const mappingDataContainer = document.getElementById('mapping-data');-->
+
+<!--            data.forEach(mapping => {-->
+<!--                const mappingDiv = document.createElement('div');-->
+<!--                mappingDiv.innerHTML = `-->
+<!--                    <strong>Student ID:</strong> ${mapping.studentId}<br>-->
+<!--                    <strong>Class ID:</strong> ${mapping.attendanceSheet.classId}<br><br>-->
+<!--                `;-->
+<!--                mappingDataContainer.appendChild(mappingDiv);-->
+<!--            });-->
+<!--        })-->
+<!--        .catch(error => console.error('Error fetching data:', error));-->
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->

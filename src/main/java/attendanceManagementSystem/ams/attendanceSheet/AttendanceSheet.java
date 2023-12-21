@@ -22,6 +22,10 @@ public class AttendanceSheet
     {
     }
 
+    public AttendanceSheet(String classId) {
+        this.classId = classId;
+    }
+
     public AttendanceSheet(String classId, JsonNode jsonData, String facultyId, String courseId) {
         this.classId = classId;
         this.jsonData = jsonData;

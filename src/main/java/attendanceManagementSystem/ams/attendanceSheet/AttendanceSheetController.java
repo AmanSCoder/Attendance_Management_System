@@ -57,7 +57,7 @@ public class AttendanceSheetController
 
         redirectAttributes.addFlashAttribute("studentList",studentList);
         redirectAttributes.addFlashAttribute("classId",classId);
-        return "redirect:/studentcoursemapping/success";
+        return "redirect:/studentmapping/success";
     }
     @GetMapping("/get-all")
     public ResponseEntity<?> getAllAttendanceSheets()

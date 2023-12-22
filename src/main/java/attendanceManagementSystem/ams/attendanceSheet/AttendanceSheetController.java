@@ -55,11 +55,15 @@ public class AttendanceSheetController
         innerValue=attendanceSheetService.getInnerValue(studentList);
         json=attendanceSheetService.getJson(dateList,innerValue);
         ObjectMapper objectMapper=new ObjectMapper();
-        attendanceSheetService.addNewAttendanceSheet(new AttendanceSheet(classId,objectMapper.valueToTree(json),new Faculty(facultyId),new Course(courseId)));
+        if(attendanceSheetService.checkStudentList(studentList))
+        {
+            attendanceSheetService.addNewAttendanceSheet(new AttendanceSheet(classId, objectMapper.valueToTree(json), new Faculty(facultyId), new Course(courseId)));
 
-        redirectAttributes.addFlashAttribute("studentList",studentList);
-        redirectAttributes.addFlashAttribute("classId",classId);
-        return "redirect:/studentmapping/success";
+            redirectAttributes.addFlashAttribute("studentList", studentList);
+            redirectAttributes.addFlashAttribute("classId", classId);
+            return "redirect:/studentmapping/success";
+        }
+        return "Failure";
     }
     @GetMapping("/get-all")
     public ResponseEntity<?> getAllAttendanceSheets()

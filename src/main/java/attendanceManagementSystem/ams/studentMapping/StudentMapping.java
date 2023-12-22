@@ -4,8 +4,6 @@ import attendanceManagementSystem.ams.attendanceSheet.AttendanceSheet;
 import attendanceManagementSystem.ams.student.Student;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
-
 
 @Entity
 @Table(name = "student_mapping")

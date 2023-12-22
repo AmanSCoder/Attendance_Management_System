@@ -2,7 +2,6 @@ package attendanceManagementSystem.ams.studentMapping;
 
 import attendanceManagementSystem.ams.attendanceSheet.AttendanceSheet;
 import attendanceManagementSystem.ams.student.Student;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;

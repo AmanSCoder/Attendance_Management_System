@@ -1,5 +1,7 @@
 package attendanceManagementSystem.ams.attendanceSheet;
 
+import attendanceManagementSystem.ams.student.Student;
+import attendanceManagementSystem.ams.student.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +13,13 @@ import java.util.*;
 @Service
 public class AttendanceSheetService {
     private final AttendanceSheetRepository attendanceSheetRepository;
+    private final StudentRepository studentRepository;
 
     @Autowired
 
-    public AttendanceSheetService(AttendanceSheetRepository attendanceSheetRepository) {
+    public AttendanceSheetService(AttendanceSheetRepository attendanceSheetRepository,StudentRepository studentRepository) {
         this.attendanceSheetRepository = attendanceSheetRepository;
+        this.studentRepository=studentRepository;
     }
 
 
@@ -95,5 +99,18 @@ public class AttendanceSheetService {
     public Iterable<AttendanceSheet> getAllAttendanceSheets()
     {
         return attendanceSheetRepository.findAll();
+    }
+
+    public boolean checkStudentList(List<String> studentList)
+    {
+        for(String student:studentList)
+        {
+            Optional< Student> studentById=studentRepository.findById(student);
+            if(!(studentById.isPresent()))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

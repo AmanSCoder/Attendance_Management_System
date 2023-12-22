@@ -13,7 +13,6 @@ public class AttendanceSheet
     @Id
     private String classId;
     @Convert(converter = JsonNodeConverter.class)
-
     @Column(columnDefinition = "json")
     private JsonNode jsonData;
 
@@ -32,11 +31,11 @@ public class AttendanceSheet
         this.classId = classId;
     }
 
-    public AttendanceSheet(String classId, JsonNode jsonData, Faculty facultyId, Course courseId) {
+    public AttendanceSheet(String classId, JsonNode jsonData, Faculty faculty, Course course) {
         this.classId = classId;
         this.jsonData = jsonData;
-        this.faculty = facultyId;
-        this.course = courseId;
+        this.faculty = faculty;
+        this.course = course;
     }
 
     public String getClassId() {

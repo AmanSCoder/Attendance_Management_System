@@ -23,7 +23,7 @@ public class StudentMappingService
         List<StudentMapping> studentMapping =new ArrayList<>();
         for(String studentId:studentList)
         {
-            studentMapping.add(new StudentMapping(studentId,new AttendanceSheet(classId)));
+            studentMapping.add(new StudentMapping(new Student(studentId),new AttendanceSheet(classId)));
         }
         studentMappingRepository.saveAll(studentMapping);
     }

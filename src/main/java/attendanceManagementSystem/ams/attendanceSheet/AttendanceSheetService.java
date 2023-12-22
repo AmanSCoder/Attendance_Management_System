@@ -31,8 +31,8 @@ public class AttendanceSheetService {
         String sql="insert into attendance_sheet values (?,?,?,?)";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setObject(1,attendanceSheet.getClassId());
-        statement.setObject(2,attendanceSheet.getCourseId());
-        statement.setObject(3,attendanceSheet.getFacultyId());
+        statement.setObject(2,attendanceSheet.getCourse().getId());
+        statement.setObject(3,attendanceSheet.getFaculty().getId());
         statement.setObject(4,attendanceSheet.getJsonData(), Types.OTHER);
 
         int r=statement.executeUpdate();

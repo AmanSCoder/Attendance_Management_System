@@ -13,14 +13,17 @@ public class Course
     private String name;
 
 
+    public Course() {
+    }
+    public Course(String id) {
+        this.id=id;
+    }
 
     public Course(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Course() {
-    }
 
     public String getId() {
         return id;

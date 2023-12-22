@@ -1,5 +1,7 @@
 package attendanceManagementSystem.ams.attendanceSheet;
 
+import attendanceManagementSystem.ams.course.Course;
+import attendanceManagementSystem.ams.faculty.Faculty;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 
@@ -15,8 +17,12 @@ public class AttendanceSheet
     @Column(columnDefinition = "json")
     private JsonNode jsonData;
 
-    private String facultyId;
-    private String courseId;
+    @ManyToOne
+    @JoinColumn(name="facultyId")
+    private Faculty faculty;
+    @ManyToOne
+    @JoinColumn(name = "courseId")
+    private Course course;
 
     public AttendanceSheet()
     {
@@ -26,11 +32,11 @@ public class AttendanceSheet
         this.classId = classId;
     }
 
-    public AttendanceSheet(String classId, JsonNode jsonData, String facultyId, String courseId) {
+    public AttendanceSheet(String classId, JsonNode jsonData, Faculty facultyId, Course courseId) {
         this.classId = classId;
         this.jsonData = jsonData;
-        this.facultyId = facultyId;
-        this.courseId = courseId;
+        this.faculty = facultyId;
+        this.course = courseId;
     }
 
     public String getClassId() {
@@ -49,20 +55,20 @@ public class AttendanceSheet
         this.jsonData = jsonData;
     }
 
-    public String getFacultyId() {
-        return facultyId;
+    public Faculty getFaculty() {
+        return faculty;
     }
 
-    public void setFacultyId(String facultyId) {
-        this.facultyId = facultyId;
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 
-    public String getCourseId() {
-        return courseId;
+    public Course getCourse() {
+        return course;
     }
 
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
 }

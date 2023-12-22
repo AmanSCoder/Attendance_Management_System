@@ -1,5 +1,7 @@
 package attendanceManagementSystem.ams.attendanceSheet;
 
+import attendanceManagementSystem.ams.course.Course;
+import attendanceManagementSystem.ams.faculty.Faculty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +55,7 @@ public class AttendanceSheetController
         innerValue=attendanceSheetService.getInnerValue(studentList);
         json=attendanceSheetService.getJson(dateList,innerValue);
         ObjectMapper objectMapper=new ObjectMapper();
-        attendanceSheetService.addNewAttendanceSheet(new AttendanceSheet(classId,objectMapper.valueToTree(json),facultyId,courseId));
+        attendanceSheetService.addNewAttendanceSheet(new AttendanceSheet(classId,objectMapper.valueToTree(json),new Faculty(facultyId),new Course(courseId)));
 
         redirectAttributes.addFlashAttribute("studentList",studentList);
         redirectAttributes.addFlashAttribute("classId",classId);

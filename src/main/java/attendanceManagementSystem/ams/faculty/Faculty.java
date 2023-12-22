@@ -36,6 +36,9 @@ public class Faculty
 
     public Faculty() {
     }
+    public Faculty(String id) {
+        this.id=id;
+    }
 
     @Override
     public String toString() {

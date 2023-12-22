@@ -71,6 +71,4 @@ public class AttendanceSheetController
         Iterable<AttendanceSheet> attendanceSheets = attendanceSheetService.getAllAttendanceSheets();
         return ResponseEntity.ok(attendanceSheets);
     }
-
-
 }

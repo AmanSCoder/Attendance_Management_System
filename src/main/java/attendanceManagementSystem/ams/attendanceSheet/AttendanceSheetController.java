@@ -1,23 +1,26 @@
 package attendanceManagementSystem.ams.attendanceSheet;
 
-import attendanceManagementSystem.ams.course.Course;
-import attendanceManagementSystem.ams.faculty.Faculty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import attendanceManagementSystem.ams.course.Course;
+import attendanceManagementSystem.ams.faculty.Faculty;
 
 @Controller
 @RequestMapping("attendance")
@@ -70,5 +73,17 @@ public class AttendanceSheetController
     {
         Iterable<AttendanceSheet> attendanceSheets = attendanceSheetService.getAllAttendanceSheets();
         return ResponseEntity.ok(attendanceSheets);
+    }
+    
+    @GetMapping("/faculty-login")
+    public String getFacultyInput() {
+        return "FacultyLogin";
+    }
+    
+    @GetMapping("/faculty-courses")
+    public String getFacultyCourses(@RequestParam String facultyId, Model model) {
+        List<Object[]> courses = attendanceSheetService.getCoursesForFaculty(facultyId);
+        model.addAttribute("courses", courses);
+        return "Faculty_Courses";
     }
 }

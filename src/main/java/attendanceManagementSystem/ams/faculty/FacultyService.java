@@ -18,7 +18,7 @@ public class FacultyService
 
     public String addNewStudent(Faculty faculty)
     {
-        Optional<Faculty> facultyById=facultyRepository.findById(faculty.getId());
+        Optional<Faculty> facultyById=facultyRepository.findById(faculty.getFacultyId());
         if(facultyById.isPresent())
         {
             return "Failure";

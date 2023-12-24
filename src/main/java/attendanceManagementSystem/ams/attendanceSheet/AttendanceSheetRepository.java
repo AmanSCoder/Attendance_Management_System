@@ -9,8 +9,10 @@ import org.springframework.data.repository.query.Param;
 
 import attendanceManagementSystem.ams.course.Course;
 
-public interface AttendanceSheetRepository extends JpaRepository<AttendanceSheet,String>, CrudRepository<AttendanceSheet, String>
-{
-	 @Query("SELECT DISTINCT a.course FROM AttendanceSheet a WHERE a.faculty.facultyId = :facultyId")
-	    List<Course> findDistinctCoursesByFacultyId(@Param("facultyId") String facultyId);
+
+
+public interface AttendanceSheetRepository extends JpaRepository<AttendanceSheet, String> {
+
+    @Query("SELECT DISTINCT a.classId, a.course.courseId, a.course.courseName FROM AttendanceSheet a WHERE a.faculty.facultyId = :facultyId")
+    List<Object[]> findDistinctClassAndCoursesByFacultyId(@Param("facultyId") String facultyId);
 }

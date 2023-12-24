@@ -82,9 +82,10 @@ public class AttendanceSheetController
     
     @GetMapping("/faculty-courses")
     public String getFacultyCourses(@RequestParam String facultyId, Model model) {
-        List<Course> courses = attendanceSheetService.getCoursesForFaculty(facultyId);
+        List<Object[]> courses = attendanceSheetService.getCoursesForFaculty(facultyId);
         model.addAttribute("courses", courses);
-        return "Faculty_Courses"; 
+        return "Faculty_Courses";
     }
+
 
 }

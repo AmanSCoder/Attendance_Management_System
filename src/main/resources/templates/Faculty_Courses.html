@@ -3,14 +3,44 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Faculty Courses</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
 </head>
 <body>
 
 <h2>Courses Registered by Faculty</h2>
 
-<table border="1">
+<table>
     <thead>
     <tr>
+        <th>Class ID</th>
         <th>Course ID</th>
         <th>Course Name</th>
     </tr>
@@ -18,8 +48,9 @@
     <tbody>
     <!-- Iterate through the list of courses and display each row -->
     <tr th:each="course : ${courses}">
-        <td th:text="${course.courseId}"></td>
-        <td th:text="${course.courseName}"></td>
+        <td th:text="${course[0]}"></td>
+        <td th:text="${course[1]}"></td>
+        <td th:text="${course[2]}"></td>
     </tr>
     </tbody>
 </table>

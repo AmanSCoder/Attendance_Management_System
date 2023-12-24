@@ -17,7 +17,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import attendanceManagementSystem.ams.course.Course;
 import attendanceManagementSystem.ams.student.Student;
 import attendanceManagementSystem.ams.student.StudentRepository;
 
@@ -124,8 +123,9 @@ public class AttendanceSheetService {
         }
         return true;
     }
-    public List<Course> getCoursesForFaculty(String facultyId) {
-        return attendanceSheetRepository.findDistinctCoursesByFacultyId(facultyId);
+    public List<Object[]> getCoursesForFaculty(String facultyId) {
+        return attendanceSheetRepository.findDistinctClassAndCoursesByFacultyId(facultyId);
     }
+
     
 }

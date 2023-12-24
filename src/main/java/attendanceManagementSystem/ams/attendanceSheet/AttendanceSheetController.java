@@ -86,6 +86,4 @@ public class AttendanceSheetController
         model.addAttribute("courses", courses);
         return "Faculty_Courses";
     }
-
-
 }

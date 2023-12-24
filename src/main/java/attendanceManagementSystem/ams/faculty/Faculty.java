@@ -9,42 +9,42 @@ import jakarta.persistence.Table;
 public class Faculty
 {
     @Id
-    private String id;
-    private String name;
+    private String facultyId;
+    private String facultyName;
 
-    public String getId() {
-        return id;
+    public String getFacultyId() {
+        return facultyId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setfacultyId(String facultyId) {
+        this.facultyId = facultyId;
     }
 
 
     public String getName() {
-        return name;
+        return facultyName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String facultyName) {
+        this.facultyName = facultyName;
     }
 
-    public Faculty(String id, String name) {
-        this.id = id;
-        this.name = name;
+    public Faculty(String facultyId, String facultyName) {
+        this.facultyId = facultyId;
+        this.facultyName = facultyName;
     }
 
     public Faculty() {
     }
-    public Faculty(String id) {
-        this.id=id;
+    public Faculty(String facultyId) {
+        this.facultyId=facultyId;
     }
 
     @Override
     public String toString() {
         return "Faculty{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                "id='" + facultyId + '\'' +
+                ", name='" + facultyName + '\'' +
                 '}';
     }
 }

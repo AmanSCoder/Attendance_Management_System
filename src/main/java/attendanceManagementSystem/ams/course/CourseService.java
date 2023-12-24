@@ -19,7 +19,7 @@ public class CourseService
 
     public String addNewCourse(Course course)
     {
-        Optional<Course> courseById=courseRepository.findById(course.getId());
+        Optional<Course> courseById=courseRepository.findById(course.getCourseId());
         if(courseById.isPresent())
         {
             return "Failure";

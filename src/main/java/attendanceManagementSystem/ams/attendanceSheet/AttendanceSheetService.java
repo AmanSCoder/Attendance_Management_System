@@ -1,14 +1,25 @@
 package attendanceManagementSystem.ams.attendanceSheet;
 
-import attendanceManagementSystem.ams.student.Student;
-import attendanceManagementSystem.ams.student.StudentRepository;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.*;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.*;
+import attendanceManagementSystem.ams.course.Course;
+import attendanceManagementSystem.ams.student.Student;
+import attendanceManagementSystem.ams.student.StudentRepository;
 
 @Service
 public class AttendanceSheetService {
@@ -31,12 +42,12 @@ public class AttendanceSheetService {
 //        System.out.println(attendanceSheet.getJsonData());
 //        attendanceSheetRepository.save(attendanceSheet);
 
-        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ams", "postgres", "Aman%9889");
+        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/attendancesystem", "postgres", "Abd@69877");
         String sql="insert into attendance_sheet values (?,?,?,?)";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setObject(1,attendanceSheet.getClassId());
-        statement.setObject(2,attendanceSheet.getCourse().getId());
-        statement.setObject(3,attendanceSheet.getFaculty().getId());
+        statement.setObject(2,attendanceSheet.getCourse().getCourseId());
+        statement.setObject(3,attendanceSheet.getFaculty().getFacultyId());
         statement.setObject(4,attendanceSheet.getJsonData(), Types.OTHER);
 
         int r=statement.executeUpdate();
@@ -113,4 +124,8 @@ public class AttendanceSheetService {
         }
         return true;
     }
+    public List<Course> getCoursesForFaculty(String facultyId) {
+        return attendanceSheetRepository.findDistinctCoursesByFacultyId(facultyId);
+    }
+    
 }

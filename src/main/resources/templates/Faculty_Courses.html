@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Faculty Courses</title>
+</head>
+<body>
+
+<h2>Courses Registered by Faculty</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Course ID</th>
+        <th>Course Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterate through the list of courses and display each row -->
+    <tr th:each="course : ${courses}">
+        <td th:text="${course.courseId}"></td>
+        <td th:text="${course.courseName}"></td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

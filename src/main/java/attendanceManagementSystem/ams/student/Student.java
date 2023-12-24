@@ -15,40 +15,40 @@ public class Student
 //            strategy = GenerationType.SEQUENCE,
 //            generator = "student_sequence"
 //    )
-    private String id;
-    private String name;
+    private String studentId;
+    private String studentName;
 
-    public Student(String id, String name) {
-        this.id = id;
-        this.name = name;
+    public Student(String studentId, String studentName) {
+        this.studentId = studentId;
+        this.studentName = studentName;
     }
-    public Student(String id)
+    public Student(String studentId)
     {
-        this.id=id;
+        this.studentId=studentId;
     }
 
-    public String getId() {
-        return id;
+    public String getStudentId() {
+        return studentId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
     @Override
     public String toString() {
         return "Student{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                "id='" + studentId + '\'' +
+                ", name='" + studentName + '\'' +
                 '}';
     }
 
-    public String getName() {
-        return name;
+    public String getStudentName() {
+        return studentName;
     }
 
     public Student() {

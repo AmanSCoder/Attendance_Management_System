@@ -23,7 +23,7 @@ public class StudentService
 
     public String addNewStudent(Student student)
     {
-        Optional<Student> studentById=studentRepository.findById(student.getId());
+        Optional<Student> studentById=studentRepository.findById(student.getStudentId());
         if(studentById.isPresent())
         {
             return "Failure";

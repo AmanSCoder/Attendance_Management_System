@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Enter Faculty ID</title>
+</head>
+<body>
+
+<h2>Enter Faculty ID</h2>
+
+<form th:action="@{/attendance/faculty-courses}" method="get">
+    <label for="facultyId">Faculty ID:</label>
+    <input type="text" id="facultyId" name="facultyId" required>
+    <button type="submit">Submit</button>
+</form>
+
+</body>
+</html>

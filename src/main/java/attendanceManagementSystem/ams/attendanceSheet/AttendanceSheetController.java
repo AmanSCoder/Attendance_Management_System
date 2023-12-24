@@ -71,4 +71,12 @@ public class AttendanceSheetController
         Iterable<AttendanceSheet> attendanceSheets = attendanceSheetService.getAllAttendanceSheets();
         return ResponseEntity.ok(attendanceSheets);
     }
+
+//    @GetMapping("studentPage")
+//    public String getStudentPage(String studentId)
+//    {
+//        attendanceSheetService.getStudentPage(studentId);
+//        return "Success";
+//    }
+
 }

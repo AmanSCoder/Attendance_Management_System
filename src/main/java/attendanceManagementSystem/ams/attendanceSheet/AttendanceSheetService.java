@@ -2,6 +2,8 @@ package attendanceManagementSystem.ams.attendanceSheet;
 
 import attendanceManagementSystem.ams.student.Student;
 import attendanceManagementSystem.ams.student.StudentRepository;
+import attendanceManagementSystem.ams.studentMapping.StudentMapping;
+import attendanceManagementSystem.ams.studentMapping.StudentMappingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,19 +16,23 @@ import java.util.*;
 public class AttendanceSheetService {
     private final AttendanceSheetRepository attendanceSheetRepository;
     private final StudentRepository studentRepository;
+    private final StudentMappingRepository studentMappingRepository;
 
     @Autowired
-    public AttendanceSheetService(AttendanceSheetRepository attendanceSheetRepository,StudentRepository studentRepository) {
+    public AttendanceSheetService(AttendanceSheetRepository attendanceSheetRepository,
+                                  StudentRepository studentRepository,
+                                  StudentMappingRepository studentMappingRepository) {
         this.attendanceSheetRepository = attendanceSheetRepository;
         this.studentRepository=studentRepository;
+        this.studentMappingRepository=studentMappingRepository;
     }
 
 
     public void addNewAttendanceSheet(AttendanceSheet attendanceSheet) throws SQLException
     {
 //        System.out.println(attendanceSheet.getClassId());
-//        System.out.println(attendanceSheet.getCourseId());
-//        System.out.println(attendanceSheet.getFacultyId());
+//        System.out.println(attendanceSheet.getCourse().getId());
+//        System.out.println(attendanceSheet.getFaculty().getId());
 //        System.out.println(attendanceSheet.getJsonData());
 //        attendanceSheetRepository.save(attendanceSheet);
 
@@ -112,4 +118,15 @@ public class AttendanceSheetService {
         }
         return true;
     }
+
+//    public void getStudentPage(String studentId)
+//    {
+//        Student student = studentRepository.findById(studentId).orElse(null);
+//
+//        List<StudentMapping> studentMappings = studentMappingRepository.findByStudentId(studentId);
+//        for(StudentMapping studentMapping:studentMappings)
+//        {
+//            System.out.println(studentMapping.getStudent().getId()+" "+studentMapping.getAttendanceSheet().getClassId());
+//        }
+//    }
 }

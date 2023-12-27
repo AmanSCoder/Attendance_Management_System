@@ -89,6 +89,7 @@ public class AttendanceSheetController
         model.addAttribute("courses", courses);
         return "Faculty_Courses";
     }
+<<<<<<< HEAD
 
     
     @GetMapping("/attendance-dates")
@@ -125,4 +126,6 @@ public class AttendanceSheetController
         attendanceSheetService.updateAttendance(classId, courseId, facultyId, date, attendanceMap);
         return "redirect:/attendance/success"; // Redirect to a success page or back to the attendance page
     }
+=======
+>>>>>>> 5ccf5fa03d288b8324bb94bf78efd9ffbe696aed
 }

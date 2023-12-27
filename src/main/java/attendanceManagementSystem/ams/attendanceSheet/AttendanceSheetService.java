@@ -1,5 +1,6 @@
 package attendanceManagementSystem.ams.attendanceSheet;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,11 +12,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import attendanceManagementSystem.ams.student.Student;
 import attendanceManagementSystem.ams.student.StudentRepository;
@@ -127,5 +137,134 @@ public class AttendanceSheetService {
         return attendanceSheetRepository.findDistinctClassAndCoursesByFacultyId(facultyId);
     }
 
+    public List<LocalDate> getAttendanceDates(String classId, String courseId) {
+        Optional<AttendanceSheet> optionalAttendanceSheet = attendanceSheetRepository.findById(classId);
+
+        if (optionalAttendanceSheet.isPresent()) {
+            AttendanceSheet attendanceSheet = optionalAttendanceSheet.get();
+
+            if (attendanceSheet.getCourse().getCourseId().equals(courseId)) {
+                JsonNode jsonData = attendanceSheet.getJsonData();
+                Iterator<Map.Entry<String, JsonNode>> fields = jsonData.fields();
+                
+                List<LocalDate> dateList = new ArrayList<>();
+                while (fields.hasNext()) {
+                    Map.Entry<String, JsonNode> entry = fields.next();
+                    LocalDate date = LocalDate.parse(entry.getKey());
+                    dateList.add(date);
+                }
+                
+                return dateList;
+            }
+        }
+
+        return Collections.emptyList();
+    }
+
+    public List<Student> getStudentsForAttendance(String classId, String courseId, String facultyId, LocalDate date) {
+        Optional<AttendanceSheet> attendanceSheetOptional = attendanceSheetRepository.findById(classId);
+
+        if (attendanceSheetOptional.isPresent()) {
+            AttendanceSheet attendanceSheet = attendanceSheetOptional.get();
+            if (attendanceSheet.getCourse().getCourseId().equals(courseId) &&
+                    attendanceSheet.getFaculty().getFacultyId().equals(facultyId)) {
+
+                // Get the JsonNode from the entity
+                JsonNode jsonData = attendanceSheet.getJsonData();
+
+                // Extract students for the given date from the JsonNode
+                List<String> studentIds = extractStudentsForDate(jsonData, date);
+
+                // Fetch Student objects based on the student IDs
+                List<Student> students = studentRepository.findAllById(studentIds);
+
+                return students;
+            }
+        }
+
+        return Collections.emptyList();
+    }
+
+
+    private List<String> extractStudentsForDate(JsonNode jsonData, LocalDate date) {
+        List<String> studentsForDate = new ArrayList<>();
+
+        // Check if the date exists in the JsonNode
+        if (jsonData != null && jsonData.has(date.toString())) {
+            JsonNode dateData = jsonData.get(date.toString());
+
+            // Iterate over students for the given date and add them to the list
+            dateData.fields().forEachRemaining(entry -> {
+                String studentId = entry.getKey();
+                String attendanceStatus = entry.getValue().asText();
+                // Add your logic here to process the student details as needed
+                studentsForDate.add(studentId + ": " + attendanceStatus);
+            });
+        }
+
+        return studentsForDate;
+    }
+
+
+
+
+
+    public void updateAttendance(String classId, String courseId, String facultyId,
+                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                 Map<String, String> attendanceMap) {
+        Optional<AttendanceSheet> attendanceSheetOptional = attendanceSheetRepository.findById(classId);
+
+        if (attendanceSheetOptional.isPresent()) {
+            AttendanceSheet attendanceSheet = attendanceSheetOptional.get();
+            if (attendanceSheet.getCourse().getCourseId().equals(courseId) &&
+                    attendanceSheet.getFaculty().getFacultyId().equals(facultyId)) {
+
+                JsonNode jsonData = attendanceSheet.getJsonData();
+                AtomicReference<ObjectNode> dateDataRef = new AtomicReference<>();
+
+                // Check if the date exists in the JSON data
+                if (jsonData != null) {
+                    if (jsonData.has(date.toString())) {
+                        dateDataRef.set((ObjectNode) jsonData.get(date.toString()));
+                    } else {
+                        // If the date doesn't exist, create a new entry
+                        dateDataRef.set(JsonNodeFactory.instance.objectNode());
+                        ((ObjectNode) jsonData).set(date.toString(), dateDataRef.get());
+                    }
+
+                    // Update attendance status for each student
+                    attendanceMap.forEach((studentId, status) -> dateDataRef.get().put(studentId, status));
+
+                    // Save the updated attendance sheet
+                    attendanceSheetRepository.save(attendanceSheet);
+                }
+            }
+        }
+    }
+
     
+    public Map<String, String> getAttendanceData(String classId, String facultyId, String courseId, String date) {
+        // Execute the SQL query
+        String jsonData = attendanceSheetRepository.getJsonData(classId, facultyId, courseId, date);
+
+        // Convert JSON data to HashMap
+        return convertJsonToHashMap(jsonData);
+    }
+    
+    private Map<String, String> convertJsonToHashMap(String jsonData) {
+        Map<String, String> resultMap = new HashMap<>();
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(jsonData);
+
+            // Assuming your JSON structure is like {"studentId": "attendanceStatus"}
+            jsonNode.fields().forEachRemaining(entry -> resultMap.put(entry.getKey(), entry.getValue().asText()));
+        } catch (IOException e) {
+            // Handle exception or log it
+            e.printStackTrace();
+        }
+
+        return resultMap;
+    }
 }

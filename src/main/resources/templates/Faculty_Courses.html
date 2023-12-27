@@ -51,6 +51,9 @@
         <td th:text="${course[0]}"></td>
         <td th:text="${course[1]}"></td>
         <td th:text="${course[2]}"></td>
+        <td>
+<a th:href="@{/attendance/attendance-dates(classId=${course[0]}, courseId=${course[1]}, facultyId=${course[3]})}">View Attendance Dates</a>
+        </td>
     </tr>
     </tbody>
 </table>

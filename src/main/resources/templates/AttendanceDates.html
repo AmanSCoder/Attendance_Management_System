@@ -1,0 +1,22 @@
+<!-- src/main/resources/templates/AttendanceDates.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Attendance Dates</title>
+</head>
+<body>
+    <h2>Attendance Dates for Class: <span th:text="${classId}"></span>, Course: <span th:text="${courseId}"></span></h2>
+    
+    <ul>
+        <li th:each="date : ${attendanceDates}">
+            <!-- Add a link to mark attendance for the selected date -->
+            <a th:href="@{/attendance/mark-attendance(classId=${classId}, courseId=${courseId}, date=${date}, facultyId=${facultyId})}"
+   			th:text="${date}">Mark Attendance for ${date}</a>
+
+        </li>
+    </ul>
+    
+    <a th:href="@{/attendance/faculty-courses}">Back to Faculty Courses</a>
+</body>
+</html>

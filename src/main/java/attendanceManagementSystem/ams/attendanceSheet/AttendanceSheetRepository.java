@@ -16,4 +16,7 @@ public interface AttendanceSheetRepository extends JpaRepository<AttendanceSheet
     @Query("SELECT DISTINCT a.classId, a.course.courseId, a.course.courseName FROM AttendanceSheet a WHERE a.faculty.facultyId = :facultyId")
     List<Object[]> findDistinctClassAndCoursesByFacultyId(@Param("facultyId") String facultyId);
 
+
+    @Query("select a from AttendanceSheet a where a.classId=:classId")
+    AttendanceSheet findByClassId(@Param("classId") String  classId);
 }

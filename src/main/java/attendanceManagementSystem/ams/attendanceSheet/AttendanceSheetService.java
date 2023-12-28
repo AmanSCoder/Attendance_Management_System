@@ -12,14 +12,10 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -142,5 +138,40 @@ public class AttendanceSheetService {
     public Iterable<AttendanceSheet> getStudentClasses(String studentId)
     {
         return studentMappingRepository.findDistinctClassIdByStudentId(studentId);
+    }
+
+    public void getStudentClassAttendance(String studentId, String classId)
+    {
+        AttendanceSheet attendanceSheet= attendanceSheetRepository.findByClassId(classId);
+        HashMap<LocalDate, HashMap<String, String>> resultMap=convertJsonNodeToHashMap(attendanceSheet.getJsonData());
+
+
+    }
+
+    private static HashMap<LocalDate, HashMap<String, String>> convertJsonNodeToHashMap(JsonNode jsonNode)
+    {
+        HashMap<LocalDate, HashMap<String, String>> resultMap = new HashMap<>();
+
+        Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
+        while (fields.hasNext()) {
+            Map.Entry<String, JsonNode> entry = fields.next();
+
+            // Parse the date from the key
+            LocalDate date = LocalDate.parse(entry.getKey());
+
+            // Parse the inner JSON object into a HashMap<String, String>
+            HashMap<String, String> innerMap = new HashMap<>();
+            JsonNode innerNode = entry.getValue();
+            Iterator<Map.Entry<String, JsonNode>> innerFields = innerNode.fields();
+            while (innerFields.hasNext()) {
+                Map.Entry<String, JsonNode> innerEntry = innerFields.next();
+                innerMap.put(innerEntry.getKey(), innerEntry.getValue().asText());
+            }
+
+            // Add the entry to the resultMap
+            resultMap.put(date, innerMap);
+        }
+
+        return resultMap;
     }
 }

@@ -94,12 +94,33 @@ public class AttendanceSheetController
         return "StudentLogin";
     }
 
+//    @GetMapping("/student-page")
+//    public ResponseEntity<?> getStudentClasses(@RequestParam String studentId)
+//    {
+//        Iterable<AttendanceSheet> classes=attendanceSheetService.getStudentClasses(studentId);
+//        return ResponseEntity.ok(classes);
+//    }
+
     @GetMapping("/student-page")
-    public ResponseEntity<?> getStudentClasses(@RequestParam String studentId)
+    public String getStudentClasses(@RequestParam String studentId,Model model)
     {
-        Iterable<AttendanceSheet> classes=attendanceSheetService.getStudentClasses(studentId);
-        return ResponseEntity.ok(classes);
+        Iterable<AttendanceSheet> attendanceSheet=attendanceSheetService.getStudentClasses(studentId);
+        model.addAttribute("attendanceSheet",attendanceSheet);
+        return "Student_Page";
+    }
+    @GetMapping("student/course")
+    public String getStudentCourse()
+    {
+        return "StudentCourseEntry";
     }
 
+    @PostMapping("/student/course-page")
+    public String getStudentClassAttendance(@RequestParam String studentId,
+                                             @RequestParam String classId,
+                                             Model model)
+    {
+        attendanceSheetService.getStudentClassAttendance(studentId,classId);
 
+        return "Success";
+    }
 }

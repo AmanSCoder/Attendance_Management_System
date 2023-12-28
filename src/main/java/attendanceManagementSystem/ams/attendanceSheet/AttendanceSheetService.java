@@ -1,6 +1,12 @@
 package attendanceManagementSystem.ams.attendanceSheet;
 
+
 import java.io.IOException;
+import attendanceManagementSystem.ams.student.Student;
+import attendanceManagementSystem.ams.student.StudentRepository;
+import attendanceManagementSystem.ams.studentMapping.StudentMapping;
+import attendanceManagementSystem.ams.studentMapping.StudentMappingRepository;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
@@ -34,29 +41,33 @@ import attendanceManagementSystem.ams.student.StudentRepository;
 public class AttendanceSheetService {
     private final AttendanceSheetRepository attendanceSheetRepository;
     private final StudentRepository studentRepository;
+    private final StudentMappingRepository studentMappingRepository;
 
     @Autowired
-    public AttendanceSheetService(AttendanceSheetRepository attendanceSheetRepository,StudentRepository studentRepository) {
+    public AttendanceSheetService(AttendanceSheetRepository attendanceSheetRepository,
+                                  StudentRepository studentRepository,
+                                  StudentMappingRepository studentMappingRepository) {
         this.attendanceSheetRepository = attendanceSheetRepository;
         this.studentRepository=studentRepository;
+        this.studentMappingRepository=studentMappingRepository;
     }
 
 
     public void addNewAttendanceSheet(AttendanceSheet attendanceSheet) throws SQLException
     {
 //        System.out.println(attendanceSheet.getClassId());
-//        System.out.println(attendanceSheet.getCourseId());
-//        System.out.println(attendanceSheet.getFacultyId());
+//        System.out.println(attendanceSheet.getCourse().getId());
+//        System.out.println(attendanceSheet.getFaculty().getId());
 //        System.out.println(attendanceSheet.getJsonData());
 //        attendanceSheetRepository.save(attendanceSheet);
 
-        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/attendancesystem", "postgres", "Abd@69877");
+        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ams", "postgres", "Aman%9889");
         String sql="insert into attendance_sheet values (?,?,?,?)";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setObject(1,attendanceSheet.getClassId());
         statement.setObject(2,attendanceSheet.getCourse().getCourseId());
         statement.setObject(3,attendanceSheet.getFaculty().getFacultyId());
-        statement.setObject(4,attendanceSheet.getJsonData(), Types.OTHER);
+        statement.setObject(4,attendanceSheet.getJsonData(),Types.OTHER);
 
         int r=statement.executeUpdate();
         System.out.println(r);
@@ -132,9 +143,12 @@ public class AttendanceSheetService {
         }
         return true;
     }
+
+
     public List<Object[]> getCoursesForFaculty(String facultyId) {
         return attendanceSheetRepository.findDistinctClassAndCoursesByFacultyId(facultyId);
     }
+
 
     public List<LocalDate> getAttendanceDates(String classId, String courseId) {
         Optional<AttendanceSheet> optionalAttendanceSheet = attendanceSheetRepository.findById(classId);
@@ -265,5 +279,11 @@ public class AttendanceSheetService {
         }
 
         return resultMap;
+    }
+
+    public Iterable<AttendanceSheet> getStudentClasses(String studentId)
+    {
+        return studentMappingRepository.findDistinctClassIdByStudentId(studentId);
+
     }
 }

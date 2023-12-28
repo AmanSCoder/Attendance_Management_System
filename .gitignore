@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/main/java/attendanceManagementSystem/ams/faculty/FacultyConfig.java
+/src/main/java/attendanceManagementSystem/ams/student/StudentConfig.java
+/src/main/java/attendanceManagementSystem/ams/course/CourseConfig.java
+
+
+

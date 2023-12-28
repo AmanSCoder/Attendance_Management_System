@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.jws.WebParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -76,6 +77,7 @@ public class AttendanceSheetController
         Iterable<AttendanceSheet> attendanceSheets = attendanceSheetService.getAllAttendanceSheets();
         return ResponseEntity.ok(attendanceSheets);
     }
+
     
     @GetMapping("/faculty-login")
     public String getFacultyInput() {
@@ -89,7 +91,7 @@ public class AttendanceSheetController
         model.addAttribute("courses", courses);
         return "Faculty_Courses";
     }
-<<<<<<< HEAD
+
 
     
     @GetMapping("/attendance-dates")
@@ -126,6 +128,18 @@ public class AttendanceSheetController
         attendanceSheetService.updateAttendance(classId, courseId, facultyId, date, attendanceMap);
         return "redirect:/attendance/success"; // Redirect to a success page or back to the attendance page
     }
-=======
->>>>>>> 5ccf5fa03d288b8324bb94bf78efd9ffbe696aed
+
+    @GetMapping("/student-login")
+    public String getStudentInput()
+    {
+        return "StudentLogin";
+    }
+
+    @GetMapping("/student-page")
+    public ResponseEntity<?> getStudentClasses(@RequestParam String studentId)
+    {
+        Iterable<AttendanceSheet> classes=attendanceSheetService.getStudentClasses(studentId);
+        return ResponseEntity.ok(classes);
+    }
+
 }

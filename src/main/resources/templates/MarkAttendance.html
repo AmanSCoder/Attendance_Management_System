@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Mark Attendance</title>
+    <!-- Add any additional styles or scripts as needed -->
+</head>
+<body>
+
+<h2>Mark Attendance for Class: <span th:text="${classId}"></span>, Course: <span th:text="${courseId}"></span></h2>
+<h3>Date: <span th:text="${date}"></span></h3>
+
+<form th:action="@{/attendance/submit-attendance}" method="post">
+    <input type="hidden" name="classId" th:value="${classId}" />
+    <input type="hidden" name="courseId" th:value="${courseId}" />
+    <input type="hidden" name="facultyId" th:value="${facultyId}" />
+    <input type="hidden" name="date" th:value="${date}" />
+
+    <table>
+        <thead>
+        <tr>
+            <th>Student ID</th>
+            <th>Student Name</th>
+            <th>Attendance Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate through the list of students and display each row -->
+        <tr th:each="student : ${studentList}">
+            <td th:text="${student.studentId}"></td>
+            <td th:text="${student.studentName}"></td>
+            <td>
+                <select name="attendanceMap[${student.studentId}]">
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
+                </select>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <button type="submit">Submit Attendance</button>
+</form>
+
+</body>
+</html>

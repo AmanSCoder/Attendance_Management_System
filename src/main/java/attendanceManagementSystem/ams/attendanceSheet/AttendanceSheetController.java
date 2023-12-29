@@ -102,7 +102,7 @@ public class AttendanceSheetController
         model.addAttribute("courseId", courseId);
         model.addAttribute("facultyId",facultyId);
         return "AttendanceDates";
-    }
+    }    
     
     @GetMapping("/mark-attendance")
     public String markAttendance(@RequestParam String classId,

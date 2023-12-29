@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.jws.WebParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import attendanceManagementSystem.ams.course.Course;
 import attendanceManagementSystem.ams.faculty.Faculty;
+import attendanceManagementSystem.ams.student.Student;
 
 @Controller
 @RequestMapping("attendance")
@@ -83,11 +85,66 @@ public class AttendanceSheetController
     }
     
     @GetMapping("/faculty-courses")
-    public String getFacultyCourses(@RequestParam String facultyId, Model model) {
+    public String getFacultyCourses(@RequestParam(required = false) String facultyId, Model model) {
+        // Your existing code
         List<Object[]> courses = attendanceSheetService.getCoursesForFaculty(facultyId);
         model.addAttribute("courses", courses);
         return "Faculty_Courses";
     }
+
+
+    
+    @GetMapping("/attendance-dates")
+    public String showAttendanceDates(@RequestParam String classId, @RequestParam String courseId, @RequestParam String facultyId, Model model) {
+    	List<LocalDate> attendanceDates = attendanceSheetService.getAttendanceDates(classId, courseId);
+        model.addAttribute("attendanceDates", attendanceDates);
+        model.addAttribute("classId", classId);
+        model.addAttribute("courseId", courseId);
+        model.addAttribute("facultyId",facultyId);
+        return "AttendanceDates";
+    }
+    
+    @GetMapping("/mark-attendance")
+    public String markAttendance(@RequestParam String classId,
+                                 @RequestParam String courseId,
+                                 @RequestParam String facultyId,
+                                 @RequestParam String date,
+                                 Model model)
+    {
+//        List<Student> studentList = attendanceSheetService.getStudentsForAttendance(classId, courseId, facultyId, LocalDate.parse(date));
+        List<Student> studentList = attendanceSheetService.getStudentsForAttendance(classId);
+
+        model.addAttribute("classId", classId);
+        model.addAttribute("courseId", courseId);
+        model.addAttribute("facultyId", facultyId);
+        model.addAttribute("date", date);
+        model.addAttribute("studentList", studentList);
+        System.out.println(studentList);
+        return "MarkAttendance";
+    }
+
+
+    
+    @PostMapping("/submit-attendance")
+    public String submitAttendance(@RequestParam("classId") String classId,
+                                   @RequestParam("courseId") String courseId,
+                                   @RequestParam("facultyId") String facultyId,
+                                   @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                   @RequestParam Map<String,String > attendanceMap)
+    {
+        System.out.println(classId);
+        System.out.println(courseId);
+        System.out.println(facultyId);
+        System.out.println(date);
+        System.out.println(attendanceMap);
+        for(var a:attendanceMap.keySet())
+        {
+            System.out.println(a+" "+a.getClass());
+        }
+//        attendanceSheetService.updateAttendance(classId, courseId, facultyId, date, attendanceMap);
+        return "redirect:/attendance/success"; // Redirect to a success page or back to the attendance page
+    }
+
     @GetMapping("/student-login")
     public String getStudentInput()
     {
@@ -114,6 +171,7 @@ public class AttendanceSheetController
         return "StudentCourseEntry";
     }
 
+
     @PostMapping("/student/course-page")
     public String getStudentClassAttendance(@RequestParam String studentId,
                                              @RequestParam String classId,
@@ -123,4 +181,5 @@ public class AttendanceSheetController
 
         return "Success";
     }
+
 }

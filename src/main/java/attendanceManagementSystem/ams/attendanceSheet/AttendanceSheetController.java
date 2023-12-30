@@ -109,23 +109,39 @@ public class AttendanceSheetController
                                  @RequestParam String courseId,
                                  @RequestParam String facultyId,
                                  @RequestParam String date,
-                                 Model model) {
-        List<Student> studentList = attendanceSheetService.getStudentsForAttendance(classId, courseId, facultyId, LocalDate.parse(date));
+                                 Model model)
+    {
+//        List<Student> studentList = attendanceSheetService.getStudentsForAttendance(classId, courseId, facultyId, LocalDate.parse(date));
+        List<Student> studentList = attendanceSheetService.getStudentsForAttendance(classId);
+
         model.addAttribute("classId", classId);
         model.addAttribute("courseId", courseId);
         model.addAttribute("facultyId", facultyId);
         model.addAttribute("date", date);
-        model.addAttribute("studentList", studentList);  // Now, the list contains Student objects
+        model.addAttribute("studentList", studentList);
+        System.out.println(studentList);
         return "MarkAttendance";
     }
 
 
     
     @PostMapping("/submit-attendance")
-    public String submitAttendance(@RequestParam String classId, @RequestParam String courseId,
-                                   @RequestParam String facultyId, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-                                   @RequestParam Map<String, String> attendanceMap) {
-        attendanceSheetService.updateAttendance(classId, courseId, facultyId, date, attendanceMap);
+    public String submitAttendance(@RequestParam("classId") String classId,
+                                   @RequestParam("courseId") String courseId,
+                                   @RequestParam("facultyId") String facultyId,
+                                   @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                   @RequestParam Map<String,String > attendanceMap)
+    {
+        System.out.println(classId);
+        System.out.println(courseId);
+        System.out.println(facultyId);
+        System.out.println(date);
+        System.out.println(attendanceMap);
+        for(var a:attendanceMap.keySet())
+        {
+            System.out.println(a+" "+a.getClass());
+        }
+//        attendanceSheetService.updateAttendance(classId, courseId, facultyId, date, attendanceMap);
         return "redirect:/attendance/success"; // Redirect to a success page or back to the attendance page
     }
 
@@ -135,11 +151,35 @@ public class AttendanceSheetController
         return "StudentLogin";
     }
 
+//    @GetMapping("/student-page")
+//    public ResponseEntity<?> getStudentClasses(@RequestParam String studentId)
+//    {
+//        Iterable<AttendanceSheet> classes=attendanceSheetService.getStudentClasses(studentId);
+//        return ResponseEntity.ok(classes);
+//    }
+
     @GetMapping("/student-page")
-    public ResponseEntity<?> getStudentClasses(@RequestParam String studentId)
+    public String getStudentClasses(@RequestParam String studentId,Model model)
     {
-        Iterable<AttendanceSheet> classes=attendanceSheetService.getStudentClasses(studentId);
-        return ResponseEntity.ok(classes);
+        Iterable<AttendanceSheet> attendanceSheet=attendanceSheetService.getStudentClasses(studentId);
+        model.addAttribute("attendanceSheet",attendanceSheet);
+        return "Student_Page";
+    }
+    @GetMapping("student/course")
+    public String getStudentCourse()
+    {
+        return "StudentCourseEntry";
+    }
+
+
+    @PostMapping("/student/course-page")
+    public String getStudentClassAttendance(@RequestParam String studentId,
+                                             @RequestParam String classId,
+                                             Model model)
+    {
+        attendanceSheetService.getStudentClassAttendance(studentId,classId);
+
+        return "Success";
     }
 
 }

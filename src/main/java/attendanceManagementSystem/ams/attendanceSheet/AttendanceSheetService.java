@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+
+import java.util.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,7 +22,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+<<<<<<< HEAD
 import org.postgresql.util.PGobject;
+=======
+
+
+import com.fasterxml.jackson.databind.JsonNode;
+>>>>>>> d19930822039f5bfe113c9a5a03321f1210bb16f
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
@@ -179,28 +188,30 @@ import attendanceManagementSystem.ams.studentMapping.StudentMappingRepository;
         return Collections.emptyList();
     }
 
-    public List<Student> getStudentsForAttendance(String classId, String courseId, String facultyId, LocalDate date) {
-        Optional<AttendanceSheet> attendanceSheetOptional = attendanceSheetRepository.findById(classId);
-
-        if (attendanceSheetOptional.isPresent()) {
-            AttendanceSheet attendanceSheet = attendanceSheetOptional.get();
-            if (attendanceSheet.getCourse().getCourseId().equals(courseId) &&
-                    attendanceSheet.getFaculty().getFacultyId().equals(facultyId)) {
-
-                // Get the JsonNode from the entity
-                JsonNode jsonData = attendanceSheet.getJsonData();
-
-                // Extract students for the given date from the JsonNode
-                List<String> studentIds = extractStudentsForDate(jsonData, date);
-
-                // Fetch Student objects based on the student IDs
-                List<Student> students = studentRepository.findAllById(studentIds);
-
-                return students;
-            }
-        }
-
-        return Collections.emptyList();
+    public List<Student> getStudentsForAttendance(String classId)
+    {
+//        Optional<AttendanceSheet> attendanceSheetOptional = attendanceSheetRepository.findById(classId);
+//
+//        if (attendanceSheetOptional.isPresent()) {
+//            AttendanceSheet attendanceSheet = attendanceSheetOptional.get();
+//            if (attendanceSheet.getCourse().getCourseId().equals(courseId) &&
+//                    attendanceSheet.getFaculty().getFacultyId().equals(facultyId)) {
+//
+//                // Get the JsonNode from the entity
+//                JsonNode jsonData = attendanceSheet.getJsonData();
+//
+//                // Extract students for the given date from the JsonNode
+//                List<String> studentIds = extractStudentsForDate(jsonData, date);
+//
+//                // Fetch Student objects based on the student IDs
+//                List<Student> students = studentRepository.findAllById(studentIds);
+//
+//                return students;
+//            }
+//        }
+//
+//        return Collections.emptyList();
+        return studentMappingRepository.findStudentByClassId(classId);
     }
 
 
@@ -290,5 +301,40 @@ import attendanceManagementSystem.ams.studentMapping.StudentMappingRepository;
     {
         return studentMappingRepository.findDistinctClassIdByStudentId(studentId);
 
+    }
+
+    public void getStudentClassAttendance(String studentId, String classId)
+    {
+        AttendanceSheet attendanceSheet= attendanceSheetRepository.findByClassId(classId);
+        HashMap<LocalDate, HashMap<String, String>> resultMap=convertJsonNodeToHashMap(attendanceSheet.getJsonData());
+
+
+    }
+
+    private static HashMap<LocalDate, HashMap<String, String>> convertJsonNodeToHashMap(JsonNode jsonNode)
+    {
+        HashMap<LocalDate, HashMap<String, String>> resultMap = new HashMap<>();
+
+        Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
+        while (fields.hasNext()) {
+            Map.Entry<String, JsonNode> entry = fields.next();
+
+            // Parse the date from the key
+            LocalDate date = LocalDate.parse(entry.getKey());
+
+            // Parse the inner JSON object into a HashMap<String, String>
+            HashMap<String, String> innerMap = new HashMap<>();
+            JsonNode innerNode = entry.getValue();
+            Iterator<Map.Entry<String, JsonNode>> innerFields = innerNode.fields();
+            while (innerFields.hasNext()) {
+                Map.Entry<String, JsonNode> innerEntry = innerFields.next();
+                innerMap.put(innerEntry.getKey(), innerEntry.getValue().asText());
+            }
+
+            // Add the entry to the resultMap
+            resultMap.put(date, innerMap);
+        }
+
+        return resultMap;
     }
 }

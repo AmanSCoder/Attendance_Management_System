@@ -44,3 +44,85 @@
 
 </body>
 </html>
+
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8"/>-->
+<!--    <title>Mark Attendance</title>-->
+<!--    &lt;!&ndash; Add any additional styles or scripts as needed &ndash;&gt;-->
+
+<!--    <script th:inline="javascript">-->
+<!--        function submitForm() {-->
+<!--            // Serialize the form data into JSON-->
+<!--            var formData = {-->
+<!--                classId: /*[[@{classId}]]*/,-->
+<!--                courseId: /*[[@{courseId}]]*/,-->
+<!--                facultyId: /*[[@{facultyId}]]*/,-->
+<!--                date: /*[[@{date}]]*/,-->
+<!--                attendanceMap: {}-->
+<!--            };-->
+
+<!--            /*[[@{#student : studentList}]]*/-->
+<!--                formData.attendanceMap['/*[[@{student.studentId}]]*/'] = document.getElementById('attendanceStatus-' + /*[[@{student.studentId}]]*/).value;-->
+<!--            /*[[@{/}]]*/-->
+
+<!--            // Set the JSON data as the value of a hidden input-->
+<!--            document.getElementById('attendanceData').value = JSON.stringify(formData);-->
+
+<!--            // Submit the form-->
+<!--            document.getElementById('attendanceForm').submit();-->
+<!--        }-->
+<!--    </script>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<h2>Mark Attendance for Class: <span th:text="${classId}"></span>, Course: <span th:text="${courseId}"></span></h2>-->
+<!--<h3>Date: <span th:text="${date}"></span></h3>-->
+
+<!--<form th:action="@{/attendance/submit-attendance}" method="post" id="attendanceForm">-->
+<!--    <input type="hidden" name="classId" th:value="${classId}" />-->
+<!--    <input type="hidden" name="courseId" th:value="${courseId}" />-->
+<!--    <input type="hidden" name="facultyId" th:value="${facultyId}" />-->
+<!--    <input type="hidden" name="date" th:value="${date}" />-->
+
+<!--    &lt;!&ndash; Include CSRF token if required &ndash;&gt;-->
+<!--    &lt;!&ndash; <input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" /> &ndash;&gt;-->
+
+<!--    <table>-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>Student ID</th>-->
+<!--            <th>Student Name</th>-->
+<!--            <th>Attendance Status</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        &lt;!&ndash; Iterate through the list of students and display each row &ndash;&gt;-->
+<!--        <tr th:each="student : ${studentList}">-->
+<!--            <td th:text="${student.studentId}"></td>-->
+<!--            <td th:text="${student.studentName}"></td>-->
+<!--            <td>-->
+<!--                <select id="attendanceStatus-/*[[@{student.studentId}]]*/">-->
+<!--                    <option value="Present">Present</option>-->
+<!--                    <option value="Absent">Absent</option>-->
+<!--                </select>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+<!--    &lt;!&ndash; Hidden input to store the JSON data &ndash;&gt;-->
+<!--    <input type="hidden" id="attendanceData" name="attendanceData" />-->
+
+<!--    <button type="button" onclick="submitForm()">Submit Attendance</button>-->
+<!--</form>-->
+
+<!--</body>-->
+<!--</html>-->
+

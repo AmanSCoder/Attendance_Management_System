@@ -68,8 +68,8 @@
 </head>
 <body>
 
-<h2>Courses Registered</h2>
-
+<h2>Courses Registered by Student</h2>
+<h2>StudentId:<span th:text="${studentId}"></span></h2>
 <table>
     <thead>
     <tr>
@@ -84,6 +84,9 @@
         <td th:text="${attendance.classId}"></td>
         <td th:text="${attendance.course.courseId}"></td>
         <td th:text="${attendance.course.courseName}"></td>
+        <td>
+            <a th:href="@{/attendance/student/course-page(classId=${attendance.classId},studentId=${studentId})}">View Attendance Dates</a>
+        </td>
     </tr>
     </tbody>
 </table>

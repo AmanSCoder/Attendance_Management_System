@@ -9,9 +9,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-
-import java.util.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,13 +19,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-<<<<<<< HEAD
-import org.postgresql.util.PGobject;
-=======
-
-
-import com.fasterxml.jackson.databind.JsonNode;
->>>>>>> d19930822039f5bfe113c9a5a03321f1210bb16f
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
@@ -66,24 +56,22 @@ import attendanceManagementSystem.ams.studentMapping.StudentMappingRepository;
 //                System.out.println(attendanceSheet.getJsonData());
 //                attendanceSheetRepository.save(attendanceSheet);
 
+            	ObjectMapper objectMapper=new ObjectMapper();
                 Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/attendancesystem", "postgres", "Abd@69877");
-                String sql="insert into attendance_sheet values (?,?,?,?)";
+                String sql="insert into attendance_sheet (class_id,course_id,faculty_id,json_data) values (?,?,?,?)";
                 PreparedStatement statement = connection.prepareStatement(sql);
-               /* statement.setObject(1,attendanceSheet.getClassId());
+                statement.setObject(1,attendanceSheet.getClassId());
                 statement.setObject(2,attendanceSheet.getCourse().getCourseId());
                 statement.setObject(3,attendanceSheet.getFaculty().getFacultyId());
-                statement.setObject(4,attendanceSheet.getJsonData(),Types.OTHER);*/
-                statement.setString(1, attendanceSheet.getClassId());
-                statement.setString(2, attendanceSheet.getCourse().getCourseId());
-                statement.setString(3, attendanceSheet.getFaculty().getFacultyId());
-                JsonNode jsonData = attendanceSheet.getJsonData();
-                PGobject pgObject = new PGobject();
-                pgObject.setType("json");
-                pgObject.setValue(attendanceSheet.getJsonData().toString());
-                statement.setObject(4, pgObject);
-
-
+                statement.setObject(4,attendanceSheet.getJsonData(),Types.OTHER);
+               
                 int r=statement.executeUpdate();
+       /*         String updateQuery="UPDATE attendance_sheet SET json_data = ? WHERE class_id = ?";
+                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                updateStatement.setObject(1,attendanceSheet.getJsonData(),Types.OTHER);
+                updateStatement.setString(2,attendanceSheet.getClassId());
+                updateStatement.executeUpdate();*/
+
                 System.out.println(r);
 
       }

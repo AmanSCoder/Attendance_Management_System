@@ -1,6 +1,8 @@
 package attendanceManagementSystem.ams.attendanceSheet;
 
 
+
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,6 +21,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+<<<<<<< HEAD
+=======
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.transaction.Transactional;
+import org.hibernate.type.JavaObjectType;
+import org.json.JSONObject;
+import org.postgresql.util.PGobject;
+>>>>>>> 1325a0a6cea97ebe48355b32894004eea003b69f
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
@@ -32,6 +44,7 @@ import attendanceManagementSystem.ams.student.Student;
 import attendanceManagementSystem.ams.student.StudentRepository;
 import attendanceManagementSystem.ams.studentMapping.StudentMappingRepository;
 
+<<<<<<< HEAD
         @Service
         public class AttendanceSheetService {
             private final AttendanceSheetRepository attendanceSheetRepository;
@@ -73,6 +86,38 @@ import attendanceManagementSystem.ams.studentMapping.StudentMappingRepository;
                 updateStatement.executeUpdate();*/
 
                 System.out.println(r);
+=======
+@Service
+public class AttendanceSheetService
+{
+    private final AttendanceSheetRepository attendanceSheetRepository;
+    private final StudentRepository studentRepository;
+    private final StudentMappingRepository studentMappingRepository;
+
+    @Autowired
+    public AttendanceSheetService(AttendanceSheetRepository attendanceSheetRepository,
+                                  StudentRepository studentRepository,
+                                  StudentMappingRepository studentMappingRepository) throws SQLException {
+        this.attendanceSheetRepository = attendanceSheetRepository;
+        this.studentRepository=studentRepository;
+        this.studentMappingRepository=studentMappingRepository;
+    }
+
+
+    public void addNewAttendanceSheet(AttendanceSheet attendanceSheet) throws SQLException, JsonProcessingException
+    {
+        ObjectMapper objectMapper=new ObjectMapper();
+        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ams", "postgres", "Aman%9889");
+        String sql="insert into attendance_sheet (class_id,course_id,faculty_id,json_data) values (?,?,?,?)";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setObject(1,attendanceSheet.getClassId());
+        statement.setObject(2,attendanceSheet.getCourse().getCourseId());
+        statement.setObject(3,attendanceSheet.getFaculty().getFacultyId());
+        statement.setObject(4,attendanceSheet.getJsonData(),Types.OTHER);
+        System.out.println(objectMapper.writeValueAsString(attendanceSheet.getJsonData()));
+
+        statement.executeUpdate();
+>>>>>>> 1325a0a6cea97ebe48355b32894004eea003b69f
 
       }
 
@@ -161,14 +206,14 @@ import attendanceManagementSystem.ams.studentMapping.StudentMappingRepository;
             if (attendanceSheet.getCourse().getCourseId().equals(courseId)) {
                 JsonNode jsonData = attendanceSheet.getJsonData();
                 Iterator<Map.Entry<String, JsonNode>> fields = jsonData.fields();
-                
+
                 List<LocalDate> dateList = new ArrayList<>();
                 while (fields.hasNext()) {
                     Map.Entry<String, JsonNode> entry = fields.next();
                     LocalDate date = LocalDate.parse(entry.getKey());
                     dateList.add(date);
                 }
-                
+
                 return dateList;
             }
         }
@@ -226,37 +271,50 @@ import attendanceManagementSystem.ams.studentMapping.StudentMappingRepository;
 
 
 
-    public void updateAttendance(String classId, String courseId, String facultyId,
+    public void updateAttendance(String classId,
                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-                                 Map<String, String> attendanceMap) {
-        Optional<AttendanceSheet> attendanceSheetOptional = attendanceSheetRepository.findById(classId);
+                                 HashMap<String, String> attendanceMap) throws SQLException {
+//        Optional<AttendanceSheet> attendanceSheetOptional = attendanceSheetRepository.findById(classId);
+//
+//        if (attendanceSheetOptional.isPresent()) {
+//            AttendanceSheet attendanceSheet = attendanceSheetOptional.get();
+//            if (attendanceSheet.getCourse().getCourseId().equals(courseId) &&
+//                    attendanceSheet.getFaculty().getFacultyId().equals(facultyId)) {
+//
+//                JsonNode jsonData = attendanceSheet.getJsonData();
+//                AtomicReference<ObjectNode> dateDataRef = new AtomicReference<>();
+//
+//                // Check if the date exists in the JSON data
+//                if (jsonData != null) {
+//                    if (jsonData.has(date.toString())) {
+//                        dateDataRef.set((ObjectNode) jsonData.get(date.toString()));
+//                    } else {
+//                        // If the date doesn't exist, create a new entry
+//                        dateDataRef.set(JsonNodeFactory.instance.objectNode());
+//                        ((ObjectNode) jsonData).set(date.toString(), dateDataRef.get());
+//                    }
+//
+//                    // Update attendance status for each student
+//                    attendanceMap.forEach((studentId, status) -> dateDataRef.get().put(studentId, status));
+//
+//                    // Save the updated attendance sheet
+//                    attendanceSheetRepository.save(attendanceSheet);
+//                }
+//            }
+//        }
+        ObjectMapper objectMapper=new ObjectMapper();
+        AttendanceSheet attendanceSheet=attendanceSheetRepository.findById(classId)
+                .orElseThrow(()->new IllegalStateException("Attendance Sheet of Class with id " + classId+" does not exist"));
+        HashMap<LocalDate,HashMap<String,String>> map=convertJsonNodeToHashMap(attendanceSheet.getJsonData());
+        map.replace(date,attendanceMap);
+        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ams", "postgres", "Aman%9889");
 
-        if (attendanceSheetOptional.isPresent()) {
-            AttendanceSheet attendanceSheet = attendanceSheetOptional.get();
-            if (attendanceSheet.getCourse().getCourseId().equals(courseId) &&
-                    attendanceSheet.getFaculty().getFacultyId().equals(facultyId)) {
+        String updateQuery = "UPDATE attendance_sheet SET json_data = ? WHERE class_id = ?";
+        PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+        updateStatement.setObject(1,objectMapper.valueToTree(map),Types.OTHER);
+        updateStatement.setString(2,classId);
+        updateStatement.executeUpdate();
 
-                JsonNode jsonData = attendanceSheet.getJsonData();
-                AtomicReference<ObjectNode> dateDataRef = new AtomicReference<>();
-
-                // Check if the date exists in the JSON data
-                if (jsonData != null) {
-                    if (jsonData.has(date.toString())) {
-                        dateDataRef.set((ObjectNode) jsonData.get(date.toString()));
-                    } else {
-                        // If the date doesn't exist, create a new entry
-                        dateDataRef.set(JsonNodeFactory.instance.objectNode());
-                        ((ObjectNode) jsonData).set(date.toString(), dateDataRef.get());
-                    }
-
-                    // Update attendance status for each student
-                    attendanceMap.forEach((studentId, status) -> dateDataRef.get().put(studentId, status));
-
-                    // Save the updated attendance sheet
-                    attendanceSheetRepository.save(attendanceSheet);
-                }
-            }
-        }
     }
 
     
@@ -291,12 +349,16 @@ import attendanceManagementSystem.ams.studentMapping.StudentMappingRepository;
 
     }
 
-    public void getStudentClassAttendance(String studentId, String classId)
+    public HashMap<LocalDate,String> getStudentClassAttendance(String studentId, String classId)
     {
         AttendanceSheet attendanceSheet= attendanceSheetRepository.findByClassId(classId);
         HashMap<LocalDate, HashMap<String, String>> resultMap=convertJsonNodeToHashMap(attendanceSheet.getJsonData());
-
-
+        HashMap<LocalDate,String> attendanceByDate=new HashMap<>();
+        for(var date:resultMap.keySet())
+        {
+            attendanceByDate.put(date,resultMap.get(date).get(studentId));
+        }
+        return attendanceByDate;
     }
 
     private static HashMap<LocalDate, HashMap<String, String>> convertJsonNodeToHashMap(JsonNode jsonNode)

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 @Converter
-public class JsonNodeConverter implements AttributeConverter<JsonNode, String> {
+public class JsonNodeConverter implements AttributeConverter<JsonNode,String> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

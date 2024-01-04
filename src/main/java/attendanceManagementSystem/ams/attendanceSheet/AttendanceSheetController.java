@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.jws.WebParam;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,7 @@ public class AttendanceSheetController
     {
         return "AttendanceEnroll";
     }
+    @Transactional
     @PostMapping("success")
     public String registerNewAttendanceSheet(@RequestParam("classId") String classId,
                                              @RequestParam("courseId") String courseId,
@@ -102,8 +104,13 @@ public class AttendanceSheetController
         model.addAttribute("courseId", courseId);
         model.addAttribute("facultyId",facultyId);
         return "AttendanceDates";
+<<<<<<< HEAD
     }    
     
+=======
+    }
+
+>>>>>>> 1325a0a6cea97ebe48355b32894004eea003b69f
     @GetMapping("/mark-attendance")
     public String markAttendance(@RequestParam String classId,
                                  @RequestParam String courseId,
@@ -119,7 +126,7 @@ public class AttendanceSheetController
         model.addAttribute("facultyId", facultyId);
         model.addAttribute("date", date);
         model.addAttribute("studentList", studentList);
-        System.out.println(studentList);
+//        System.out.println(studentList);
         return "MarkAttendance";
     }
 
@@ -130,8 +137,7 @@ public class AttendanceSheetController
                                    @RequestParam("courseId") String courseId,
                                    @RequestParam("facultyId") String facultyId,
                                    @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-                                   @RequestParam Map<String,String > attendanceMap)
-    {
+                                   @RequestParam Map<String,String> attendanceMap) throws SQLException {
         System.out.println(classId);
         System.out.println(courseId);
         System.out.println(facultyId);
@@ -141,8 +147,10 @@ public class AttendanceSheetController
         {
             System.out.println(a+" "+a.getClass());
         }
-//        attendanceSheetService.updateAttendance(classId, courseId, facultyId, date, attendanceMap);
-        return "redirect:/attendance/success"; // Redirect to a success page or back to the attendance page
+        HashMap<String,String> attendance=new HashMap<>();
+        attendance.put("a","Absent");
+//        attendanceSheetService.updateAttendance(classId ,date, attendance);
+        return "Success"; // Redirect to a success page or back to the attendance page
     }
 
     @GetMapping("/student-login")
@@ -163,6 +171,7 @@ public class AttendanceSheetController
     {
         Iterable<AttendanceSheet> attendanceSheet=attendanceSheetService.getStudentClasses(studentId);
         model.addAttribute("attendanceSheet",attendanceSheet);
+        model.addAttribute("studentId",studentId);
         return "Student_Page";
     }
     @GetMapping("student/course")
@@ -172,14 +181,16 @@ public class AttendanceSheetController
     }
 
 
-    @PostMapping("/student/course-page")
-    public String getStudentClassAttendance(@RequestParam String studentId,
-                                             @RequestParam String classId,
+    @GetMapping("/student/course-page")
+    public String getStudentClassAttendance(@RequestParam("studentId") String studentId,
+                                             @RequestParam("classId") String classId,
                                              Model model)
     {
-        attendanceSheetService.getStudentClassAttendance(studentId,classId);
-
-        return "Success";
+        HashMap<LocalDate,String> attendanceByDate= attendanceSheetService.getStudentClassAttendance(studentId,classId);
+        model.addAttribute("attendanceByDate",attendanceByDate);
+        model.addAttribute("studentId",studentId);
+        model.addAttribute("classId",classId);
+        return "StudentAttendanceDisplay";
     }
 
 }

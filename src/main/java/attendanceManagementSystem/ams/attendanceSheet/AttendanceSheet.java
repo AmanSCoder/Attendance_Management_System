@@ -4,6 +4,7 @@ import attendanceManagementSystem.ams.course.Course;
 import attendanceManagementSystem.ams.faculty.Faculty;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
 
 
 @Entity
@@ -14,6 +15,7 @@ public class AttendanceSheet
     private String classId;
     @Convert(converter = JsonNodeConverter.class)
     @Column(columnDefinition = "json")
+//    @Type( type="org.hibernate.type.JsonStringType")
     private JsonNode jsonData;
 
     @ManyToOne

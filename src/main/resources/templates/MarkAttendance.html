@@ -1,16 +1,134 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Student Attendance</title>-->
+<!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div id="attendanceForms"></div>-->
+<!--<form id="attendanceForm">-->
+<!--    &lt;!&ndash; Attendance data will be added here dynamically &ndash;&gt;-->
+<!--    <button type="submit">Submit Attendance</button>-->
+<!--</form>-->
+
+<!--<script>-->
+<!--        $(document).ready(function() {-->
+<!--            $.ajax({-->
+<!--                url: "/attendance/mark-attendance",-->
+<!--                method: "POST",-->
+<!--                success: function(students) {-->
+<!--                    var tableHtml = "<table><tr><th>Student ID</th><th>Name</th><th>Attendance</th></tr>";-->
+<!--                    students.forEach(function(student) {-->
+<!--                        tableHtml += "<tr><td>" + student.studentId + "</td><td>" + student.studentName + "</td><td>";-->
+<!--                        tableHtml += '<select name="attendance" id="attendance"><option value="Present">Present</option><option value="Absent">Absent</option></select>';-->
+<!--                        tableHtml += "</td></tr>";-->
+<!--                    });-->
+<!--                    tableHtml += "</table>";-->
+<!--                    $("#attendanceForm").html(tableHtml);-->
+<!--                },-->
+<!--                error: function(error) {-->
+<!--                    console.log("Error fetching students", error);-->
+<!--                }-->
+<!--            });-->
+
+<!--            $("#attendanceForm").submit(function(event) {-->
+<!--                event.preventDefault(); // Prevent the form from submitting-->
+
+<!--                var formData = $(this).serializeArray();-->
+<!--                var attendanceData = [];-->
+
+<!--                for (var i = 0; i < formData.length; i++) {-->
+<!--                    var fieldName = formData[i].name;-->
+<!--                    var fieldValue = formdata[i].value;-->
+
+<!--                    if (fieldName === "attendance") {-->
+<!--                        attendanceData.push({ studentId: formData[i - 1].value, attendanceStatus: fieldValue });-->
+<!--                    }-->
+<!--                }-->
+
+<!--                console.log(attendanceData);-->
+
+<!--                $.ajax({-->
+<!--                    url: "/attendance/submit-attendance",-->
+<!--                    method: "POST",-->
+<!--                    contentType: "application/json",-->
+<!--                    data: JSON.stringify(attendanceData),-->
+<!--                    success: function(response) {-->
+<!--                        console.log("Data sent successfully");-->
+<!--                    },-->
+<!--                    error: function(error) {-->
+<!--                        console.log("Error sending data", error);-->
+<!--                    }-->
+<!--                });-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>Mark Attendance</title>
     <!-- Add any additional styles or scripts as needed -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function createJsonData() {
+            var jsonData = {
+                classId: /*[[${classId}]]*/,
+                courseId: /*[[${courseId}]]*/,
+                facultyId: /*[[${facultyId}]]*/,
+                date: /*[[${date}]]*/,
+                attendanceMap: {}
+            };
+
+            /* Iterate through the list of students and populate the attendanceMap */
+            var studentList = /*[[${studentList}]]*/;
+                for (var i = 0; i < studentList.length; i++) {
+                    var student = studentList[i];
+                    var attendanceStatus = document.getElementById("attendance_" + student.studentId).value;
+
+                    var attendanceData = {};
+                    attendanceData[student.studentId] = attendanceStatus;
+
+                    jsonData.attendanceMap = attendanceData;
+                }
+
+            return JSON.stringify(jsonData);
+
+        }
+
+        function prepareAndSubmit() {
+            var jsonData = createJsonData();
+            document.getElementById("jsonInput").value = jsonData;
+            return true;
+        }
+        /*]]>*/
+    </script>
 </head>
 <body>
 
 <h2>Mark Attendance for Class: <span th:text="${classId}"></span>, Course: <span th:text="${courseId}"></span></h2>
 <h3>Date: <span th:text="${date}"></span></h3>
 
-<form th:action="@{/attendance/submit-attendance}" method="post">
+<form th:action="@{/attendance/submit-attendance}" method="post" enctype="multipart/form-data">
     <input type="hidden" name="classId" th:value="${classId}" />
     <input type="hidden" name="courseId" th:value="${courseId}" />
     <input type="hidden" name="facultyId" th:value="${facultyId}" />
@@ -30,7 +148,7 @@
             <td th:text="${student.studentId}"></td>
             <td th:text="${student.studentName}"></td>
             <td>
-                <select name="attendanceMap[${student.studentId}]">
+                <select id="attendance_${student.studentId}" name="attendance[${student.studentId}]">
                     <option value="Present">Present</option>
                     <option value="Absent">Absent</option>
                 </select>
@@ -39,11 +157,74 @@
         </tbody>
     </table>
 
-    <button type="submit">Submit Attendance</button>
+    <button type="submit" onclick="return prepareAndSubmit()">Submit Attendance</button>
 </form>
+
+<!-- Hidden input to store the JSON data -->
+<input type="hidden" id="jsonInput" name="jsonData"/>
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8"/>-->
+<!--    <title>Mark Attendance</title>-->
+<!--    &lt;!&ndash; Add any additional styles or scripts as needed &ndash;&gt;-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<h2>Mark Attendance for Class: <span th:text="${classId}"></span>, Course: <span th:text="${courseId}"></span></h2>-->
+<!--<h3>Date: <span th:text="${date}"></span></h3>-->
+
+<!--<form th:action="@{/attendance/submit-attendance}" method="post">-->
+<!--    <input type="hidden" name="classId" th:value="${classId}" />-->
+<!--    <input type="hidden" name="courseId" th:value="${courseId}" />-->
+<!--    <input type="hidden" name="facultyId" th:value="${facultyId}" />-->
+<!--    <input type="hidden" name="date" th:value="${date}" />-->
+
+<!--    <table>-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>Student ID</th>-->
+<!--            <th>Student Name</th>-->
+<!--            <th>Attendance Status</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        &lt;!&ndash; Iterate through the list of students and display each row &ndash;&gt;-->
+<!--        <tr th:each="student : ${studentList}">-->
+<!--            <td th:text="${student.studentId}"></td>-->
+<!--            <td th:text="${student.studentName}"></td>-->
+<!--            <td>-->
+<!--                <select name="attendanceMap[${student.studentId}]">-->
+<!--                    <option value="Present">Present</option>-->
+<!--                    <option value="Absent">Absent</option>-->
+<!--                </select>-->
+<!--            </td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+<!--    <button type="submit">Submit Attendance</button>-->
+<!--</form>-->
+
+<!--</body>-->
+<!--</html>-->
 
 
 

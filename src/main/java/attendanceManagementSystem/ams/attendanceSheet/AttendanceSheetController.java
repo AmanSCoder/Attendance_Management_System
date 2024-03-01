@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.jws.WebParam;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +23,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import attendanceManagementSystem.ams.course.Course;
 import attendanceManagementSystem.ams.faculty.Faculty;
 import attendanceManagementSystem.ams.student.Student;
+import jakarta.transaction.Transactional;
 
 @Controller
-@RequestMapping("attendance")
+@RequestMapping
 public class AttendanceSheetController
 {
     private final AttendanceSheetService attendanceSheetService;
@@ -42,7 +41,7 @@ public class AttendanceSheetController
     {
         this.attendanceSheetService = attendanceSheetService;
     }
-    @GetMapping
+    @GetMapping("attendance")
     public String AttendanceEnroll()
     {
         return "AttendanceEnroll";
@@ -73,7 +72,7 @@ public class AttendanceSheetController
         }
         return "Failure";
     }
-    @GetMapping("/get-all")
+    @GetMapping("attendance/get-all")
     public ResponseEntity<?> getAllAttendanceSheets()
     {
         Iterable<AttendanceSheet> attendanceSheets = attendanceSheetService.getAllAttendanceSheets();
@@ -81,12 +80,12 @@ public class AttendanceSheetController
     }
 
     
-    @GetMapping("/faculty-login")
+    @GetMapping("attendance/faculty-login")
     public String getFacultyInput() {
         return "FacultyLogin";
     }
     
-    @GetMapping("/faculty-courses")
+    @GetMapping("attendance/faculty-courses")
     public String getFacultyCourses(@RequestParam(required = false) String facultyId, Model model) {
         // Your existing code
         List<Object[]> courses = attendanceSheetService.getCoursesForFaculty(facultyId);
@@ -96,7 +95,7 @@ public class AttendanceSheetController
 
 
     
-    @GetMapping("/attendance-dates")
+    @GetMapping("attendance/attendance-dates")
     public String showAttendanceDates(@RequestParam String classId, @RequestParam String courseId, @RequestParam String facultyId, Model model) {
     	List<LocalDate> attendanceDates = attendanceSheetService.getAttendanceDates(classId, courseId);
         model.addAttribute("attendanceDates", attendanceDates);
@@ -104,14 +103,9 @@ public class AttendanceSheetController
         model.addAttribute("courseId", courseId);
         model.addAttribute("facultyId",facultyId);
         return "AttendanceDates";
-<<<<<<< HEAD
-    }    
-    
-=======
     }
-
->>>>>>> 1325a0a6cea97ebe48355b32894004eea003b69f
-    @GetMapping("/mark-attendance")
+    
+    @GetMapping("attendance/mark-attendance")
     public String markAttendance(@RequestParam String classId,
                                  @RequestParam String courseId,
                                  @RequestParam String facultyId,
@@ -129,15 +123,14 @@ public class AttendanceSheetController
 //        System.out.println(studentList);
         return "MarkAttendance";
     }
-
-
     
-    @PostMapping("/submit-attendance")
+
+    @PostMapping("attendance/submit-attendance")
     public String submitAttendance(@RequestParam("classId") String classId,
                                    @RequestParam("courseId") String courseId,
                                    @RequestParam("facultyId") String facultyId,
                                    @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
-                                   @RequestParam Map<String,String> attendanceMap) throws SQLException {
+                                   @RequestParam Map attendanceMap) throws SQLException {
         System.out.println(classId);
         System.out.println(courseId);
         System.out.println(facultyId);
@@ -147,13 +140,14 @@ public class AttendanceSheetController
         {
             System.out.println(a+" "+a.getClass());
         }
-        HashMap<String,String> attendance=new HashMap<>();
+        HashMap<String,String> attendance = new HashMap<>();
         attendance.put("a","Absent");
+        System.out.println(attendanceMap);
 //        attendanceSheetService.updateAttendance(classId ,date, attendance);
         return "Success"; // Redirect to a success page or back to the attendance page
     }
 
-    @GetMapping("/student-login")
+    @GetMapping("attendance/student-login")
     public String getStudentInput()
     {
         return "StudentLogin";
@@ -166,7 +160,7 @@ public class AttendanceSheetController
 //        return ResponseEntity.ok(classes);
 //    }
 
-    @GetMapping("/student-page")
+    @GetMapping("attendance/student-page")
     public String getStudentClasses(@RequestParam String studentId,Model model)
     {
         Iterable<AttendanceSheet> attendanceSheet=attendanceSheetService.getStudentClasses(studentId);
@@ -174,14 +168,14 @@ public class AttendanceSheetController
         model.addAttribute("studentId",studentId);
         return "Student_Page";
     }
-    @GetMapping("student/course")
+    @GetMapping("attendance/student/course")
     public String getStudentCourse()
     {
         return "StudentCourseEntry";
     }
 
 
-    @GetMapping("/student/course-page")
+    @GetMapping("attendance/student/course-page")
     public String getStudentClassAttendance(@RequestParam("studentId") String studentId,
                                              @RequestParam("classId") String classId,
                                              Model model)
@@ -192,5 +186,31 @@ public class AttendanceSheetController
         model.addAttribute("classId",classId);
         return "StudentAttendanceDisplay";
     }
+    
+    @GetMapping("admin/features")
+    public String Admin() {
+    	return "Admin";
+    }
+    
+    @GetMapping("admin/login")
+    	public String AdminLogin() {
+    		return "AdminLogin";
+    	}
+    @PostMapping("admin/login")
+    public String adminAuthenticate(@RequestParam("adminUser") String adminUser,
+                                    @RequestParam("adminPassword") String adminPassword) {
+    	System.out.print("done");
+        // Add your logic to check admin credentials
+        if ("user".equals(adminUser) && "password".equals(adminPassword)) {
+            // Authentication successful
+            return "Admin"; // Redirect to admin features page
+        } else {
+            // Authentication failed
+            return "redirect:/admin/login?error"; // Redirect back to login page with an error parameter
+        }
+    }
+    
+    }
 
-}
+
+

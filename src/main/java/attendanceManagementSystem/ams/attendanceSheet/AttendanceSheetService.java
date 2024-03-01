@@ -1,8 +1,5 @@
 package attendanceManagementSystem.ams.attendanceSheet;
 
-
-
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,74 +16,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
-<<<<<<< HEAD
-=======
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import jakarta.transaction.Transactional;
-import org.hibernate.type.JavaObjectType;
-import org.json.JSONObject;
-import org.postgresql.util.PGobject;
->>>>>>> 1325a0a6cea97ebe48355b32894004eea003b69f
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import attendanceManagementSystem.ams.student.Student;
 import attendanceManagementSystem.ams.student.StudentRepository;
 import attendanceManagementSystem.ams.studentMapping.StudentMappingRepository;
 
-<<<<<<< HEAD
-        @Service
-        public class AttendanceSheetService {
-            private final AttendanceSheetRepository attendanceSheetRepository;
-            private final StudentRepository studentRepository;
-            private final StudentMappingRepository studentMappingRepository;
-
-            @Autowired
-            public AttendanceSheetService(AttendanceSheetRepository attendanceSheetRepository,
-                                          StudentRepository studentRepository,
-                                          StudentMappingRepository studentMappingRepository) {
-                this.attendanceSheetRepository = attendanceSheetRepository;
-                this.studentRepository=studentRepository;
-                this.studentMappingRepository=studentMappingRepository;
-            }
-
-
-            public void addNewAttendanceSheet(AttendanceSheet attendanceSheet) throws SQLException
-            {
-//                System.out.println(attendanceSheet.getClassId());
-//                System.out.println(attendanceSheet.getCourse().getId());
-//                System.out.println(attendanceSheet.getFaculty().getId());
-//                System.out.println(attendanceSheet.getJsonData());
-//                attendanceSheetRepository.save(attendanceSheet);
-
-            	ObjectMapper objectMapper=new ObjectMapper();
-                Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/attendancesystem", "postgres", "Abd@69877");
-                String sql="insert into attendance_sheet (class_id,course_id,faculty_id,json_data) values (?,?,?,?)";
-                PreparedStatement statement = connection.prepareStatement(sql);
-                statement.setObject(1,attendanceSheet.getClassId());
-                statement.setObject(2,attendanceSheet.getCourse().getCourseId());
-                statement.setObject(3,attendanceSheet.getFaculty().getFacultyId());
-                statement.setObject(4,attendanceSheet.getJsonData(),Types.OTHER);
-               
-                int r=statement.executeUpdate();
-       /*         String updateQuery="UPDATE attendance_sheet SET json_data = ? WHERE class_id = ?";
-                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
-                updateStatement.setObject(1,attendanceSheet.getJsonData(),Types.OTHER);
-                updateStatement.setString(2,attendanceSheet.getClassId());
-                updateStatement.executeUpdate();*/
-
-                System.out.println(r);
-=======
+        
 @Service
 public class AttendanceSheetService
 {
@@ -107,7 +50,7 @@ public class AttendanceSheetService
     public void addNewAttendanceSheet(AttendanceSheet attendanceSheet) throws SQLException, JsonProcessingException
     {
         ObjectMapper objectMapper=new ObjectMapper();
-        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ams", "postgres", "Aman%9889");
+        Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/attendancesystem", "postgres", "Abd@69877");
         String sql="insert into attendance_sheet (class_id,course_id,faculty_id,json_data) values (?,?,?,?)";
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setObject(1,attendanceSheet.getClassId());
@@ -117,7 +60,7 @@ public class AttendanceSheetService
         System.out.println(objectMapper.writeValueAsString(attendanceSheet.getJsonData()));
 
         statement.executeUpdate();
->>>>>>> 1325a0a6cea97ebe48355b32894004eea003b69f
+
 
       }
 

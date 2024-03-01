@@ -17,8 +17,22 @@ public class Student
 //    )
     private String studentId;
     private String studentName;
+    private String password;
+    private String role;
 
-    public Student(String studentId, String studentName) {
+    public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	public Student(String studentId, String studentName) {
         this.studentId = studentId;
         this.studentName = studentName;
     }

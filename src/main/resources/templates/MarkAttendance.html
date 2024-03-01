@@ -100,7 +100,12 @@
             };
 
             /* Iterate through the list of students and populate the attendanceMap */
-            var studentList = /*[[${studentList}]]*/;
+            var studentList = /*[[@{studentList}]]*/;
+        studentList.forEach(function(student) {
+            var attendanceStatus = document.getElementById("attendanceStatus-" + student.studentId).value;
+            jsonData.attendanceMap[student.studentId] = attendanceStatus;
+        });
+			/*
                 for (var i = 0; i < studentList.length; i++) {
                     var student = studentList[i];
                     var attendanceStatus = document.getElementById("attendance_" + student.studentId).value;
@@ -110,6 +115,8 @@
 
                     jsonData.attendanceMap = attendanceData;
                 }
+                */
+                console.log(jsonData);
 
             return JSON.stringify(jsonData);
 
@@ -128,7 +135,7 @@
 <h2>Mark Attendance for Class: <span th:text="${classId}"></span>, Course: <span th:text="${courseId}"></span></h2>
 <h3>Date: <span th:text="${date}"></span></h3>
 
-<form th:action="@{/attendance/submit-attendance}" method="post" enctype="multipart/form-data">
+<form th:action="@{/attendance/submit-attendance}" method="post">
     <input type="hidden" name="classId" th:value="${classId}" />
     <input type="hidden" name="courseId" th:value="${courseId}" />
     <input type="hidden" name="facultyId" th:value="${facultyId}" />
@@ -148,10 +155,10 @@
             <td th:text="${student.studentId}"></td>
             <td th:text="${student.studentName}"></td>
             <td>
-                <select id="attendance_${student.studentId}" name="attendance[${student.studentId}]">
-                    <option value="Present">Present</option>
-                    <option value="Absent">Absent</option>
-                </select>
+                <select th:field="*{attendance[__${student.studentId}__]}">
+    				<option value="Present">Present</option>
+    				<option value="Absent">Absent</option>
+				</select>
             </td>
         </tr>
         </tbody>
